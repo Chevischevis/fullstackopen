@@ -1,3 +1,6 @@
+# Diagrama: Crear nueva nota
+
+```mermaid
 sequenceDiagram
     participant user
     participant browser
