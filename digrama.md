@@ -6,32 +6,36 @@ sequenceDiagram
     participant browser
     participant server
 
-    user->>browser: Escribe una nueva nota
+    user->>browser: Escribe una nota en el formulario
     user->>browser: Clic en botón "Save"
 
-    Note right of browser: El navegador ejecuta una función JavaScript que obtiene el contenido del input
+    Note right of browser: El formulario tiene método POST y action /new_note
 
-    browser->>server: POST https://studies.cs.helsinki.fi/exampleapp/new_note
+    browser->>server: POST /new_note (note=texto de la nota)
     activate server
+
+    Note right of server: El servidor agrega la nota al arreglo en memoria:
+    Note right of server: notes.push({ content: req.body.note, date: new Date() })
+
     server-->>browser: 302 Redirect a /notes
     deactivate server
 
-    browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/notes
+    browser->>server: GET /notes
     activate server
     server-->>browser: HTML actualizado
     deactivate server
 
-    browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/main.css
+    browser->>server: GET /main.css
     server-->>browser: CSS
 
-    browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/main.js
+    browser->>server: GET /main.js
     server-->>browser: JavaScript
 
-    Note right of browser: El navegador ejecuta el JS y solicita las notas actualizadas
+    Note right of browser: JS se ejecuta y pide los datos de notas
 
-    browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/data.json
+    browser->>server: GET /data.json
     activate server
-    server-->>browser: JSON con la lista de notas (incluyendo la nueva)
+    server-->>browser: JSON con notas actualizadas
     deactivate server
 
-    Note right of browser: El navegador renderiza la lista de notas
+    Note right of browser: El navegador ejecuta la función de renderizado y muestra la nueva nota
