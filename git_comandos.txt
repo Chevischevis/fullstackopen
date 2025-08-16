@@ -1,0 +1,38 @@
+# 📘 Guía Rápida de Comandos Git
+
+## 🔹 Configuración Inicial
+git config --global user.name "Tu Nombre"
+git config --global user.email "tuemail@example.com"
+git config --list
+
+## 🔹 Flujo Básico
+git init                     # Inicializar un repositorio
+git status                   # Ver estado de los archivos
+git add archivo.txt          # Agregar un archivo al área de preparación
+git add .                    # Agregar todos los cambios
+git commit -m "mensaje"      # Guardar un commit con mensaje
+git log --oneline            # Ver historial de commits resumido
+
+## 🔹 Ramas (Branches)
+git branch                   # Listar ramas
+git branch nueva-rama        # Crear nueva rama
+git checkout nueva-rama      # Cambiar de rama
+git checkout -b nueva-rama   # Crear y cambiar en un paso
+git merge nueva-rama         # Fusionar una rama en la actual
+
+## 🔹 Trabajando con Remotos
+git clone URL                # Clonar un repositorio
+git remote -v                # Ver remotos configurados
+git remote add origin URL    # Conectar a un remoto
+git push origin main         # Subir cambios a remoto
+git pull origin main         # Traer cambios del remoto
+
+## 🔹 Comandos Útiles
+git diff                     # Ver diferencias
+git reset archivo.txt        # Quitar archivo del área de preparación
+git checkout -- archivo.txt  # Revertir cambios no confirmados
+git tag v1.0                 # Crear un tag
+git push origin v1.0         # Subir tag al remoto
+
+---
+👉 Consejo: escribe estos comandos a mano varias veces en tus proyectos para aprenderlos más rápido.
