@@ -15,10 +15,16 @@ git log --oneline            # Ver historial de commits resumido
 
 ## 🔹 Ramas (Branches)
 git branch                   # Listar ramas
+git branch -r                # Listar las ramas remotas
+
 git branch nueva-rama        # Crear nueva rama
 git checkout nueva-rama      # Cambiar de rama
 git checkout -b nueva-rama   # Crear y cambiar en un paso
 git merge nueva-rama         # Fusionar una rama en la actual
+
+git branch -m nuevo-nombre   # Cambiar nombre de la rama actual
+git branch -m nombre-viejo nuevo-nombre
+
 
 ## 🔹 Trabajando con Remotos
 git clone URL                # Clonar un repositorio
