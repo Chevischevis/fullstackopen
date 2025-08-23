@@ -1,3 +1,15 @@
 #Guía rápida de comandos de vite
 Set-ExecutionPolicy RemoteSigned -Scope CurrentUser #Run Powershell as a administrator
 
+# npm 6.x (desactualizado, pero aun en uso por algunos):
+npm create vite@latest part1 --template react
+
+# npm 7+, el doble guion adicional es necesario:
+npm create vite@latest part1 -- --template react
+
+
+#Moverse a la carpeta crada en este caso part1
+
+cd part1
+npm install
+npm run dev 
