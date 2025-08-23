@@ -42,3 +42,5 @@ git push origin v1.0         # Subir tag al remoto
 
 ---
 👉 Consejo: escribe estos comandos a mano varias veces en tus proyectos para aprenderlos más rápido.
+
+
