@@ -1,76 +1,73 @@
 import { useState } from 'react'
-const Hello = ({ name, age }) => {
-  //Desectructuracion
-  // const name = props.name
-  // const age = props.age
-  // const { name, age } = props
-  const bornYear = () => new Date().getFullYear - props.age
-  return (
-    <div>
-      <p>
-        Hello {name}, you are {age} years old
-      </p>
-      <p> So you were probably born in {bornYear()}</p>
-    </div>
-  )
-}
 
-
-const App = () => {
-  const [counter, setCounter] = useState(0)
-  console.log('App is rendering with counter value: ', counter)
-  //Usando useState, para recordar el valor del contador
-  // setTimeout(() => setCounter(counter + 1), 1000)
-
-
-  const increaseByOne = () => {
-    console.log('increasing, value before', counter)
-    setCounter(counter + 1)
-  } 
-  const setToZero = () =>{
-    console.log('resetting to zero, value before', counter)
-    setCounter(0)
+const Header = ({ text }) => <h1>{text}</h1>
+const StatisticLine = ({ text, value }) => (
+  <p>{text} {value}</p>
+)
+const Statistics  = ({ good, neutral, bad }) => {
+  const all = good + neutral + bad
+  if (all === 0) {
+    return <p>No feedback given</p>
   }
-  const decreaseByOne = () =>{
-console.log('decreasing, value before', counter)
-    setCounter(counter - 1)
-  } 
-  // const name = 'Peter'
-  // const age = 10
-
-  // return (
-  //   <div>
-  //     <h1>Greetings</h1>
-  //     <Hello name="Maya" age={26 + 10} />
-  //     <Hello name={name} age={age} />
-  //   </div>
-  // )
-  // const handleClick = () => {
-  //   console.log('clicked')
-  // }
-
-  const Display = (props) =><div>{props.counter}</div>
-  const Button = ({onClick, text}) => <button onClick={onClick}>{text}</button>
-
   return (
     <>
-      <Display counter={counter} />
-      <Button
-        onClick={increaseByOne}
-        text='plus'
-      />
-      <Button
-        onClick={setToZero}
-        text='zero'
-      />
-      <Button
-        onClick={decreaseByOne}
-        text='minus'
-      />
-      {/* <button onClick={handleClick}>Click</button> */}
+    <table>
+      <tbody>
+        <tr>
+          <td>good</td>
+          <td>{good}</td>
+        </tr>
+        <tr>
+          <td>neutral</td>
+          <td>{neutral}</td>
+        </tr>       
+        <tr>
+          <td>bad</td>
+          <td>{bad}</td>
+        </tr>
+        <tr>
+          <td>all</td>
+          <td>{all}</td>
+        </tr>
+        <tr>
+          <td>average</td>
+          <td>{(good - bad) / all}</td>
+        </tr>
+        <tr>
+          <td>positive</td>
+          <td>{good / all * 100} %</td>
+        </tr>
+      </tbody>
+    </table>
+      {/* <StatisticLine text="good" value={good} />
+      <StatisticLine text="neutral" value={neutral} />
+      <StatisticLine text="bad" value={bad} />
+      <StatisticLine text="all" value={all} />      
+      <StatisticLine text="average" value={(good - bad) / all} />
+      <StatisticLine text="positive" value={good / all * 100 + ' %'} /> */}
     </>
   )
 }
-//Comentario importante
-//Desectructuracion
+const App = () => {
+  // guarda los clics de cada botón en su propio estado
+  const [good, setGood] = useState(0)
+  const [neutral, setNeutral] = useState(0)
+  const [bad, setBad] = useState(0)
+
+  const handleGoodClick = () => setGood(good + 1)
+  const handleNeutralClick = () => setNeutral(neutral + 1)
+  const handleBadClick = () => setBad(bad + 1)
+  
+  return (
+    <>
+    <Header text="give feedback" />
+    <button onClick={() => setGood(good + 1)}>good</button>
+    <button onClick={() => setNeutral(neutral + 1)}>neutral</button>
+    <button onClick={() => setBad(bad + 1)}>bad</button>
+    <Header text="statistics" />
+    <Statistics  good={good} neutral={neutral} bad={bad} />
+    </>
+  )
+}
+
 export default App
