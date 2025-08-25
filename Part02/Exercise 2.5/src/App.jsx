@@ -1,35 +1,54 @@
+import Course from "./components/Course"
 
-import './App.css'
-
-const App = (props) => {
-  const { notes } = props
+const App = () => {
+    const courses = [
+    {
+      name: 'Half Stack application development',
+      id: 1,
+      parts: [
+        {
+          name: 'Fundamentals of React',
+          exercises: 10,
+          id: 1
+        },
+        {
+          name: 'Using props to pass data',
+          exercises: 7,
+          id: 2
+        },
+        {
+          name: 'State of a component',
+          exercises: 14,
+          id: 3
+        },
+        {
+          name: 'Redux',
+          exercises: 11,
+          id: 4
+        }
+      ]
+    }, 
+    {
+      name: 'Node.js',
+      id: 2,
+      parts: [
+        {
+          name: 'Routing',
+          exercises: 3,
+          id: 1
+        },
+        {
+          name: 'Middlewares',
+          exercises: 7,
+          id: 2
+        }
+      ]
+    }
+  ]
 
   return (
-    <div>
-      <h1>Notes</h1>
-      <ul>
-        <li>{notes[0].content}</li>
-        <li>{notes[1].content}</li>
-        <li>{notes[2].content}</li>
-      </ul>
-    </div>
+   <Course courses={courses}></Course>
   )
 }
 
-var animals = [{name: 'Sofia', species: 'cat'},
-               {name: 'Rex', species: 'dog'}, 
-               {name: 'Nemo', species: 'fish'},
-               {name: 'Fido', species: 'dog'}];
-                  
-var isdog = function(animal) {
-  return animal.species === 'dog';
-};
-var dogs = animals.filter(isdog);
-console.log(dogs);
-//var names = dogs.map(function(animal) { return animal.name + ' is a ' + animal.species; });
-
-var names = animals.map((animal) => `${animal.name} is a ${animal.species}`);
-
-console.log(names);
-
-export default App
+export default App  
