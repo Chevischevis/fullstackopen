@@ -52,5 +52,5 @@ const App = () => {
     </div>
   )
 }
-
+//Me quede en la seccion EL navegador como entorno de ejecucion
 export default App
