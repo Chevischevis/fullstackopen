@@ -1,4 +1,4 @@
-import { PhoneBook, PersonForm, Persons } from './Components/PhoneBook'
+import { PhoneBook, PersonForm, Persons, NotificationError, NotificationSuccess } from './Components/PhoneBook'
 import { useState, useEffect } from 'react'
 import phoneBookService from './services/phoneBook'
 import './index.css'
@@ -7,6 +7,8 @@ const App = () => {
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [filter, setFilter] = useState('')
+  const [errorMessage, setErrorMessage] = useState(null)
+  const [successMessage, setSuccessMessage] = useState(null)
 
   const hook = () => {
     phoneBookService.getAll().then(initialPersons => {
@@ -16,45 +18,49 @@ const App = () => {
 
   useEffect(hook, [])
 
-
-  const addPerson = (event) => {
+  const addPerson = async (event) => {
     event.preventDefault()
 
-    if (persons.some(person => person.name === newName)) {
-      const personObject = persons.find(person => person.name === newName)
-      const id = personObject.id
+    const existingPerson = persons.find(person => person.name === newName)
 
+    if (existingPerson) {
+      // La persona ya existe, intentar actualizar
       if (window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)) {
-        const updatedPerson = { ...personObject, number: newNumber }
-        console.log(updatedPerson)
-        phoneBookService
-          .update(id, updatedPerson)
-          .then(returnedPerson => {
-            setPersons(persons.map(person => person.id !== id ? person : returnedPerson))
-            setNewName('')
-            setNewNumber('')
-          })
+        const updatedPerson = { ...existingPerson, number: newNumber }
+        try {
+          const returnedPerson = await phoneBookService.update(existingPerson.id, updatedPerson)
+          setPersons(persons.map(p => p.id !== existingPerson.id ? p : returnedPerson))
+          setNewName('')
+          setNewNumber('')
+          setSuccessMessage(`Updated ${returnedPerson.name}'s number`)
+          setTimeout(() => setSuccessMessage(null), 5000)
+        } catch (error) {
+          setErrorMessage(`Information of ${existingPerson.name} has already been removed from server or an error occurred`)
+          setTimeout(() => setErrorMessage(null), 5000)
+          setPersons(persons.filter(p => p.id !== existingPerson.id))
+        }
       }
-      return
-    }
+    } else {
+      // La persona no existe, crear nuevo contacto
+      const newId = persons.length > 0 ? Math.max(...persons.map(p => p.id)) + 1 : 1
+      const newPerson = { name: newName, number: newNumber, id: newId }
 
-    const personObject = {
-      name: newName,
-      number: newNumber,
-      id: persons.length + 1,
-    }
-
-    phoneBookService
-      .create(personObject)
-      .then(returnedPerson => {
+      try {
+        const returnedPerson = await phoneBookService.create(newPerson)
         setPersons(persons.concat(returnedPerson))
         setNewName('')
         setNewNumber('')
-      })
+        setSuccessMessage(`Added ${returnedPerson.name}`)
+        setTimeout(() => setSuccessMessage(null), 5000)
+      } catch (error) {
+        setErrorMessage(`Failed to create ${newName}: ${error.message}`)
+        setTimeout(() => setErrorMessage(null), 5000)
+      }
+    }
   }
 
 
-  const handleRemovePerson = (id) => {
+  const handleRemovePerson = async (id) => {
     const person = persons.find(p => p.id === id);
     if (!person) {
       alert("This contact no longer exists.");
@@ -62,9 +68,16 @@ const App = () => {
     }
 
     if (window.confirm(`Delete ${person.name}?`)) {
-      phoneBookService.remove(id).then(() => {
+      try {
+        const response = await phoneBookService.remove(id);
         setPersons(persons.filter(p => p.id !== id));
-      });
+        setSuccessMessage(`Deleted ${person.name}`);
+        setTimeout(() => setSuccessMessage(null), 5000);
+      } catch (error) {
+        setErrorMessage(`Information of ${person.name} has already been removed from server or an error occurred`);
+        setTimeout(() => setErrorMessage(null), 5000)
+        setPersons(persons.filter(n => n.id !== id))
+      }
     }
   };
 
@@ -80,10 +93,11 @@ const App = () => {
 
 
   const ShowInformation = filter ? persons.filter(person => person.name.toLowerCase().includes(filter.toLowerCase())) : persons
-  console.log(persons.map(person => person.name))
   return (
     <div>
       <h2>Phonebook</h2>
+      <NotificationError message={errorMessage}></NotificationError>
+      <NotificationSuccess message={successMessage}></NotificationSuccess>
       <PhoneBook filter={filter} handleFilterChange={handleFilterChange} />
       <PersonForm addPerson={addPerson} newName={newName} newNumber={newNumber}
         handleNameChange={handleNameChange} handleNumberChange={handleNumberChange} />

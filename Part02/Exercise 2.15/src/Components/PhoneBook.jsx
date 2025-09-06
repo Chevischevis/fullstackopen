@@ -40,4 +40,24 @@ const Persons = ({ ShowInformation, handleRemovePerson }) => {
   )
 }
 
-export { PhoneBook, PersonForm, Persons}
+const NotificationError = ({ message }) => {
+  if (message === null) {
+    return null
+  } else {
+    return (
+      <div className="error"> {message} </div>
+    )
+  } 
+}
+
+const NotificationSuccess = ({ message }) => {
+  if (message === null) {
+    return null
+  }else{
+    return (
+      <div className="success"> {message} </div>
+    )
+  }
+} 
+
+export { PhoneBook, PersonForm, Persons, NotificationError, NotificationSuccess}

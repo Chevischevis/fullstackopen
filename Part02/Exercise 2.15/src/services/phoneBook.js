@@ -13,16 +13,15 @@ const create = newObject => {
 
 
 const update = (id, newObject) => {
-    console.log('Updating', id, newObject)
-    const request = axios.put(`${baseUrl}/${id}`, newObject)
-    return request.then(response => response.data)
+  console.log('Updating', Number(id), newObject)
+  return axios.put(`${baseUrl}/${Number(id)}`, newObject).then(res => res.data)
 }
 
-const remove = id => {
-    const request = axios.delete(`${baseUrl}/${id}`)
-    return request.then(response => response.data)
-                    .catch(error => console.log(error))
-}   
+const remove = (id) => {
+  console.log('Deleting', Number(id))
+  return axios.delete(`${baseUrl}/${Number(id)}`).then(res => res.data)
+}
+
 
 export default { 
   getAll: getAll, 
