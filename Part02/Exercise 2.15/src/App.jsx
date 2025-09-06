@@ -1,8 +1,7 @@
 import { PhoneBook, PersonForm, Persons } from './Components/PhoneBook'
 import { useState, useEffect } from 'react'
-import axios from 'axios'
-import './App.css'
-
+import phoneBookService from './services/phoneBook'
+import './index.css'
 const App = () => {
   const [persons, setPersons] = useState([])
   const [newName, setNewName] = useState('')
@@ -10,31 +9,65 @@ const App = () => {
   const [filter, setFilter] = useState('')
 
   const hook = () => {
-    axios
-      .get('http://localhost:3001/persons')
-      .then(response => {
-        setPersons(response.data)
-      })
+    phoneBookService.getAll().then(initialPersons => {
+      setPersons(initialPersons)
+    })
   }
 
   useEffect(hook, [])
 
-  
-  const addPerson = (event) => {
-    event.preventDefault()
-    if (persons.some(person => person.name === newName)) {
-      alert(newName + `is already added to phonebook`)
-      return
+
+const addPerson = (event) => {
+  event.preventDefault()
+
+  if (persons.some(person => person.name === newName)) {
+    const personObject = persons.find(person => person.name === newName)
+    const id = personObject.id
+
+    if (window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)) {
+      const updatedPerson = { ...personObject, number: newNumber }
+      console.log(updatedPerson)
+      phoneBookService
+        .update(id, updatedPerson)
+        .then(returnedPerson => {
+          setPersons(persons.map(person => person.id !== id ? person : returnedPerson))
+          setNewName('')
+          setNewNumber('')
+        })
     }
-    const personObject = {
-      name: newName,
-      number: newNumber,
-      id: persons.length + 1,
-    }
-    setPersons(persons.concat(personObject))
-    setNewName('')
-    setNewNumber('')
+    return
   }
+
+  const personObject = {
+    name: newName,
+    number: newNumber,
+    id: persons.length + 1,
+  }
+
+  phoneBookService
+    .create(personObject)
+    .then(returnedPerson => {
+      setPersons(persons.concat(returnedPerson))
+      setNewName('')
+      setNewNumber('')
+    })
+}
+
+
+  const handleRemovePerson = (id) => {
+    const person = persons.find(p => p.id === id);
+    if (!person) {
+      alert("This contact no longer exists.");
+      return;
+    }
+
+    if (window.confirm(`Delete ${person.name}?`)) {
+      phoneBookService.remove(id).then(() => {
+        setPersons(persons.filter(p => p.id !== id));
+      });
+    }
+  };
+
   const handleNumberChange = (event) => {
     setNewNumber(event.target.value)
   }
@@ -56,7 +89,7 @@ const App = () => {
         handleNameChange={handleNameChange} handleNumberChange={handleNumberChange} />
 
       <h2>Numbers</h2>
-      <Persons ShowInformation={ShowInformation} />
+      <Persons ShowInformation={ShowInformation} handleRemovePerson={handleRemovePerson} />
     </div>
   )
 }

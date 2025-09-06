@@ -27,11 +27,14 @@ const PersonForm = ({ addPerson, newName, handleNameChange, newNumber, handleNum
   )
 }
 
-const Persons = ({ ShowInformation }) => {
+const Persons = ({ ShowInformation, handleRemovePerson }) => {
   return (
     <>
       {ShowInformation.map(person => (
-        <p key={person.name}  >{person.name} {person.number}</p>
+        <div key={person.id}>
+          <p>{person.name} {person.number}</p>
+          <button onClick={() => { handleRemovePerson(person.id)}}>delete</button>
+        </div>
       ))}
     </>
   )
