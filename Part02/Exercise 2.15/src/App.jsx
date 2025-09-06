@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { PhoneBook, PersonForm, Persons } from './Components/PhoneBook'
 import { useState, useEffect } from 'react'
 import phoneBookService from './services/phoneBook'
@@ -74,11 +75,31 @@ const addPerson = (event) => {
   const handleNameChange = (event) => {
     setNewName(event.target.value)
   }
+=======
+import { useState, useEffect } from 'react'
+import axios from 'axios'
+import Note from './components/Note'
 
-  const handleFilterChange = (event) => {
-    setFilter(event.target.value)
-  }
 
+const App = () => {
+  const [notes, setNotes] = useState([])
+  const [newNote, setNewNote] = useState('')
+  const [showAll, setShowAll] = useState(true)
+
+>>>>>>> 88294265fd544de6bc98a3ec60ebbe75c6bc921d
+
+  useEffect(() => {
+    console.log('effect')
+    axios
+      .get('http://localhost:3001/notes')
+      .then(response => {
+        console.log('promise fulfilled')
+        setNotes(response.data)
+      })
+  }, [])
+  console.log('render', notes.length, 'notes')
+
+<<<<<<< HEAD
   const ShowInformation = filter ? persons.filter(person => person.name.toLowerCase().includes(filter.toLowerCase())) : persons
   console.log(persons.map(person => person.name))
   return (
@@ -95,3 +116,7 @@ const addPerson = (event) => {
 }
 
 export default App
+=======
+  // ...
+}
+>>>>>>> 88294265fd544de6bc98a3ec60ebbe75c6bc921d
