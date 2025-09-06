@@ -43,4 +43,9 @@ git push origin v1.0         # Subir tag al remoto
 ---
 👉 Consejo: escribe estos comandos a mano varias veces en tus proyectos para aprenderlos más rápido.
 
+#Recuperar los cambios mas recientes en el remoo
+git fetch origin
+git pull origin main --rebase
+
+
 
