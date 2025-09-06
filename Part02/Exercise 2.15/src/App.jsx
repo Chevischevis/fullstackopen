@@ -1,31 +1,25 @@
-<<<<<<< HEAD
+import { PhoneBook, PersonForm, Persons } from './Components/PhoneBook'
 import { useState, useEffect } from 'react'
 import axios from 'axios'
-import Note from './components/Note'
-
-
-const App = () => {
-  const [notes, setNotes] = useState([])
-  const [newNote, setNewNote] = useState('')
-  const [showAll, setShowAll] = useState(true)
-=======
-import {PhoneBook, PersonForm, Persons} from './Components/PhoneBook'
-import { useState, useEffect} from 'react'
-import axios from 'axios' 
 import './App.css'
-useEffect(() => {
-  axios
-    .get('http://localhost:3001/persons')
-    .then(response => {
-      setPersons(response.data)
-    })  
-  }, [])
+
 const App = () => {
   const [persons, setPersons] = useState([])
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [filter, setFilter] = useState('')
 
+  const hook = () => {
+    axios
+      .get('http://localhost:3001/persons')
+      .then(response => {
+        setPersons(response.data)
+      })
+  }
+
+  useEffect(hook, [])
+
+  
   const addPerson = (event) => {
     event.preventDefault()
     if (persons.some(person => person.name === newName)) {
@@ -58,11 +52,11 @@ const App = () => {
     <div>
       <h2>Phonebook</h2>
       <PhoneBook filter={filter} handleFilterChange={handleFilterChange} />
-      <PersonForm addPerson={addPerson} newName={newName} newNumber={newNumber} 
-                  handleNameChange={handleNameChange} handleNumberChange={handleNumberChange}/>  
-      
+      <PersonForm addPerson={addPerson} newName={newName} newNumber={newNumber}
+        handleNameChange={handleNameChange} handleNumberChange={handleNumberChange} />
+
       <h2>Numbers</h2>
-     <Persons ShowInformation={ShowInformation} />
+      <Persons ShowInformation={ShowInformation} />
     </div>
   )
 }
